@@ -1,0 +1,59 @@
+/* Asegúrate de que el HTML y el body ocupen toda la altura disponible */
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Contenedor principal que se expande para empujar el footer hacia abajo */
+main {
+    flex-grow: 1;
+}
+
+/* Estilos del footer */
+footer {
+    background-color: #080808;
+    color: #fff;
+    padding: 20px 10px;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+}
+
+/* Contenedor del footer */
+.footer-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-width: 1000px;
+    margin: auto;
+}
+
+/* Secciones dentro del footer */
+.footer-section {
+    flex: 1;
+    min-width: 150px;
+    margin-bottom: 10px;
+}
+
+.footer-section h3 {
+    font-size: 14px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #555;
+    padding-bottom: 3px;
+}
+
+.footer-section p,
+.footer-section ul {
+    font-size: 12px;
+    line-height: 1.3;
+}
+
+.footer-section ul li {
+    margin-bottom: 5px;
+}
+
+.footer-section.social a {
+    font-size: 16px;
+    margin: 0 5px;
+}

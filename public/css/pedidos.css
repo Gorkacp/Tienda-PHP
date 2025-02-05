@@ -1,0 +1,108 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8;
+}
+
+section {
+    width: 80%;
+    margin: 20px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+    text-align: center;
+    color: #333;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th, td {
+    padding: 10px;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+td a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+td a:hover {
+    color: #4CAF50;
+}
+
+form input[type="text"],
+form select {
+    width: 100%;
+    padding: 8px;
+    margin: 4px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+form input[type="submit"] {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+form input[type="submit"]:hover {
+    background-color: #218838;
+}
+
+.ri-check-line, .ri-delete-bin-2-line, .ri-edit-line {
+    font-size: 20px;
+    color: #333;
+    margin: 0 10px;
+    cursor: pointer;
+}
+
+.ri-check-line:hover, .ri-delete-bin-2-line:hover, .ri-edit-line:hover {
+    color: #007bff;
+}
+
+.errores p {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+}
+
+.alert_red {
+    display: block;
+    width: fit-content;
+    margin: 20px auto;
+    padding: 10px;
+    background-color: #ff4d4d;
+    color: white;
+    border-radius: 5px;
+    text-align: center;
+}

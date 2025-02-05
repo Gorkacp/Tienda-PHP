@@ -1,0 +1,158 @@
+/* Resetear estilos predeterminados */
+@import url('https://cdn.jsdelivr.net/npm/normalize.css');
+
+/* Importar fuente desde Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+/* Estilos globales */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f7fc;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* Estilo base del menú */
+.navbar {
+    background-color: #000000;
+    color: white;
+    padding: 15px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Menú izquierdo (Inicio y Categorías) */
+.menu-left ul {
+    display: flex;
+    gap: 30px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.menu-left li {
+    position: relative;
+}
+
+/* Estilo del enlace principal */
+.menu-left li a {
+    font-weight: 600;
+    font-size: 16px;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.menu-left li a:hover {
+    background-color: #34495e;
+    color: #16a085;
+}
+
+/* ✅ Ocultar el submenú inicialmente */
+.submenu-items {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #333;
+    width: 200px;
+    padding: 10px 0;
+    border-radius: 5px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    opacity: 0; /* Inicialmente invisible */
+    visibility: hidden; /* Evita que ocupe espacio cuando está oculto */
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* ✅ Mostrar el submenú solo cuando pasamos el cursor por encima */
+.submenu:hover .submenu-items {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Asegurar que el submenú se muestre completamente al pasar el mouse */
+.submenu-items li {
+    list-style: none;
+}
+
+.submenu-items li a {
+    color: white;
+    font-size: 14px;
+    padding: 10px 15px;
+    display: block;
+    transition: background-color 0s ease;
+}
+
+.submenu-items li a:hover {
+    background-color: #1abc9c;
+}
+
+/* Sección de usuario e inicio de sesión */
+.user-actions {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: flex-end;
+    flex-shrink: 0;
+}
+
+.user-actions a {
+    padding: 10px 20px;
+    border-radius: 30px;
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.user-actions a:hover {
+    background-color: #1abc9c;
+    transform: translateY(-2px);
+}
+
+/* Nombre del usuario */
+.user-name {
+    font-weight: 600;
+    color: #f4f4f4;
+}
+
+/* Icono del carrito */
+.cart-link {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    color: white;
+}
+
+.cart-link i {
+    margin-right: 8px;
+    font-size: 22px;
+}
+
+.cart-link:hover {
+    color: #1abc9c;
+}
