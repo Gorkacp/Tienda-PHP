@@ -198,7 +198,7 @@ class PedidoController {
      *
      * @return array Los pedidos obtenidos.
      */
-    public function actualizar(){
+    public function actualizar() {
         $usuario = $_SESSION['login'];
         $pedido = $_POST['data'];
         $id = $pedido['id'];
@@ -213,11 +213,12 @@ class PedidoController {
             $errores = $this->validarPedidoActualizado($data);
     
             if (!empty($errores)) {
-                $pedidos = $this->pedidoService->getAll();
-                $this->pages->render('pedido/gestionarPedidos', ['pedidos' => $pedidos ,'errores' => $errores]);
+                $pedido = $this->pedidoService->getById($id);
+                $this->pages->render('pedido/editarPedido', ['pedido' => $pedido, 'errores' => $errores]);
             } else {
                 $this->pedidoService->editar($id, $coste, $fecha, $hora, $estado, $usuario_id);
-                $this->pages->render('pedido/gestionarPedidos');
+                header('Location: ' . BASE_URL . 'pedido/todosLosPedidos');
+                exit();
             }
         }
     }
@@ -249,78 +250,71 @@ class PedidoController {
          * para ver cómo usar XOAUTH2.
          * La sección IMAP muestra cómo guardar este mensaje en la carpeta 'Correo Enviado' utilizando comandos IMAP.
          */
-    
+        
         // Importar las clases de PHPMailer al espacio de nombres global
         require '../vendor/autoload.php';
-    
+        
         // Crear una nueva instancia de PHPMailer
         $mail = new PHPMailer();
-    
+        
         // Decirle a PHPMailer que use SMTP
         $mail->isSMTP();
-    
+        
         // Activar depuración SMTP para detalles más extensos en caso de errores
         $mail->SMTPDebug = SMTP::DEBUG_SERVER;
-    
+        
         // Establecer el nombre del servidor de correo
         $mail->Host = 'smtp.gmail.com';
-    
-        // Establecer el número de puerto SMTP:
-        // - 465 para SMTP con TLS implícito, es decir, SMTPS RFC8314
-        // - 587 para SMTP+STARTTLS
+        
+        // Número de puerto SMTP:
         $mail->Port = 465;
-    
+        
         // Establecer el mecanismo de encriptación a usar:
-        // - SMTPS (TLS implícito en el puerto 465) o
-        // - STARTTLS (TLS explícito en el puerto 587)
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-    
+        
         // Si se debe usar autenticación SMTP
         $mail->SMTPAuth = true;
-    
+        
         // Nombre de usuario para la autenticación SMTP - usa la dirección de correo completa para Gmail
         $mail->Username = 'gorkacarmonapino@gmail.com';
-    
+        
         // Contraseña para la autenticación SMTP
         $mail->Password = 'eqlu ahyy ykbk dftf';  // Considera usar una variable de entorno para la seguridad
-    
+        
         // Establecer el correo del remitente
         $mail->setFrom('gorkacarmonapino@gmail.com', 'Tienda');
-    
+        
         // Establecer una dirección de respuesta alternativa
         $mail->addReplyTo('replyto@example.com', 'Primer Apellido');
-    
+        
         // Establecer a quién se debe enviar el mensaje
         $mail->addAddress($_SESSION['login']->email, $_SESSION['login']->nombre);
-    
+        
         // Establecer la línea de asunto
         $mail->Subject = 'Ya ha llegado su pedido';
-    
+        
         ob_start();
-    
+        
         // Definir las variables
         $nombre = $_SESSION['login']->nombre;
         $idPedido = $id;
         $productos = $this->pedidoService->getProductosPedido($id);
         $fecha = Utils::getFecha();
         $hora = Utils::getHora();
-    
+        
         // Incluir el archivo y almacenar la salida en una variable
         include __DIR__ . '/../Views/pedido/correo.php';
         $html = ob_get_contents();
-    
+        
         // Finalizar el almacenamiento en búfer
         ob_end_clean();
-    
+        
         // Usar la salida como el cuerpo HTML del correo
         $mail->msgHTML($html, __DIR__);
-    
+        
         // Reemplazar el cuerpo en texto plano con uno creado manualmente
         $mail->AltBody = 'Este es el cuerpo del mensaje en texto plano';
-    
-        // Adjuntar un archivo de imagen
-        $mail->addAttachment('images/phpmailer_mini.png');
-    
+        
         // Enviar el mensaje, comprobar errores
         if (!$mail->send()) {
             echo 'Error en el correo: ' . $mail->ErrorInfo;
@@ -328,27 +322,5 @@ class PedidoController {
             echo '<h1><a href="/Tienda-PHP">Volver</a></h1>';
             echo '¡Mensaje enviado!';
         }
-    
-    
-    
-        // Sección 2: IMAP
-        // Los comandos IMAP requieren la extensión PHP IMAP, disponible en: https://php.net/manual/en/imap.setup.php
-        // Función que utiliza las funciones imap_*() de PHP para guardar mensajes: https://php.net/manual/en/book.imap.php
-        // Puedes usar imap_getmailboxes($imapStream, '/imap/ssl', '*' ) para obtener una lista de carpetas o etiquetas disponibles, 
-        // esto puede ser útil si intentas que esto funcione en un servidor IMAP que no sea de Gmail.
-        function save_mail($mail)
-        {
-            // Puedes cambiar 'Correo Enviado' por cualquier otra carpeta o etiqueta
-            $path = '{imap.gmail.com:993/imap/ssl}[Gmail]/Sent Mail';
-    
-            // Decirle a tu servidor que abra una conexión IMAP utilizando el mismo nombre de usuario y contraseña que usaste para SMTP
-            $imapStream = imap_open($path, $mail->Username, $mail->Password);
-    
-            $result = imap_append($imapStream, $path, $mail->getSentMIMEMessage());
-            imap_close($imapStream);
-    
-            return $result;
-        }
-    
     }
 }    

@@ -1,10 +1,10 @@
 {
-    "name": "usuario/examen-tienda",
-    "description": "Examen Repaso",
+    "name": "Gorka/Tienda-PHP",
+    "description": "Recuperacion de la tienda",
     "type": "project",
     "autoload": {
         "psr-4": {
-            "Usuario\\ExamenTienda\\": "src/",
+            "Gorka\\Tienda-PHP\\": "src/",
             "Controllers\\": "./src/Controllers/",
             "Lib\\": "./src/Lib/",
             "Models\\": "./src/Models/",
@@ -18,8 +18,8 @@
     },
     "authors": [
         {
-            "name": "Pablolopezlo15",
-            "email": "plopezlozano12@gmail.com"
+            "name": "Gorka",
+            "email": "gorkacarmonapino@gmail.com"
         }
     ],
     "minimum-stability": "stable",

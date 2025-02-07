@@ -1,0 +1,87 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.detalles {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.detalle {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    max-width: 1000px;
+    width: 100%;
+    margin: 20px;
+}
+
+.img-detalle {
+    flex: 1;
+    max-width: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f9f9f9;
+    padding: 20px;
+}
+
+.img-detalle img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.detalle-contenido {
+    flex: 2;
+    padding: 20px;
+}
+
+.detalle-contenido h2 {
+    margin: 0 0 10px;
+    font-size: 2em;
+    color: #333;
+}
+
+.detalle-contenido p {
+    margin: 10px 0;
+    color: #666;
+}
+
+.precio-detalles {
+    margin: 20px 0;
+}
+
+.preciodetalle {
+    font-size: 1.5em;
+    color: #e74c3c;
+}
+
+.añadirCarrito {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.2s, transform 0.2s;
+    font-size: 1em;
+}
+
+.añadirCarrito:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+.añadirCarrito .icon {
+    margin-left: 10px;
+}

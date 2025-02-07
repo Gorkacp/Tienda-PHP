@@ -5,6 +5,15 @@
         <strong>No se ha podido crear el producto</strong>
     <?php endif;?>
     <?php Utils::deleteSession('producto');?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear</title>
+    <link rel="stylesheet" href="<?=BASE_URL?>/public/css/usuario.css">
+</head>
+<body>
     <section>
         <h1>Crear nuevo producto</h1>
         <form action="<?=BASE_URL?>producto/crear/" method="POST" enctype="multipart/form-data">
@@ -39,3 +48,5 @@
             <input type="submit" value="Crear" required>
         </form>
     </section>
+    </body>
+</html>

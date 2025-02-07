@@ -130,8 +130,10 @@ class UsuarioController {
                     $usuario = Usuario::fromArray($login);
                     $verify = $this->usuarioService->login($usuario);
     
-                    if ($verify!=false){
+                    if ($verify != false){
                         $_SESSION['login'] = $verify;
+                        header("Location: " . BASE_URL); // Redirigir al inicio después de iniciar sesión
+                        exit();
                     } else {
                         $_SESSION['login'] = "failed";
                     }

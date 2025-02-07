@@ -1,5 +1,7 @@
 <?php
+
 namespace Controllers;
+
 use Models\Producto;
 use Models\Categoria;
 use Lib\Pages;
@@ -9,7 +11,8 @@ use Repositories\ProductoRepository;
 /**
  * Clase CarritoController
  *
- * Esta clase maneja la lógica para las acciones relacionadas con el carrito.
+ * Esta clase maneja la lógica para las acciones relacionadas con el carrito de compras.
+ * Incluye métodos para agregar, eliminar, actualizar productos y obtener el total del carrito.
  */
 class CarritoController {
     private Producto $producto;
@@ -20,7 +23,7 @@ class CarritoController {
     /**
      * Constructor de CarritoController.
      *
-     * Inicializa una nueva instancia de la clase CarritoController.
+     * Inicializa las instancias de Producto, Categoria, Pages y ProductoService.
      */
     public function __construct() {
         $this->productoService = new ProductoService(new ProductoRepository());
@@ -32,7 +35,12 @@ class CarritoController {
     /**
      * Agrega un producto al carrito.
      *
+     * Este método agrega un producto al carrito de compras. Si el producto ya está en el carrito, se aumenta la cantidad.
+     * Redirige a la página del carrito.
+     *
      * @param int $id El ID del producto.
+     * 
+     * @return void
      */
     public function agregarProducto() {
         $productoId = $_GET['id'];
@@ -42,26 +50,33 @@ class CarritoController {
             $_SESSION['carrito'][$productoId] = $producto;
             $_SESSION['carrito'][$productoId]['cantidad'] = 1;
         }
-        header('Location: '.BASE_URL.'carrito/obtenerCarrito/');        
+        header('Location: '.BASE_URL.'carrito/obtenerCarrito/');
     }
 
     /**
      * Elimina un producto del carrito.
      *
+     * Este método elimina un producto del carrito de compras y redirige a la página del carrito.
+     *
      * @param int $id El ID del producto.
+     * 
+     * @return void
      */
     public function eliminarProducto($id) {
         $productoId = $id;
         if (isset($_SESSION['carrito'][$productoId])) {
             unset($_SESSION['carrito'][$productoId]);
         }
-        header('Location: '.BASE_URL.'carrito/obtenerCarrito/');        
+        header('Location: '.BASE_URL.'carrito/obtenerCarrito/');
     }
 
     /**
-     * Obtiene los productos del carrito.
+     * Obtiene los productos del carrito y muestra la página del carrito.
      *
-     * @return array Los productos obtenidos.
+     * Este método recupera los productos guardados en la sesión y calcula el total.
+     * Luego, renderiza la página del carrito con los productos y el total.
+     *
+     * @return void
      */
     public function obtenerCarrito() {
         if (!isset($_SESSION['carrito'])) {
@@ -74,6 +89,10 @@ class CarritoController {
 
     /**
      * Vacía el carrito.
+     *
+     * Este método elimina todos los productos del carrito.
+     *
+     * @return void
      */
     public function vaciarCarrito() {
         unset($_SESSION['carrito']);
@@ -82,20 +101,29 @@ class CarritoController {
     /**
      * Aumenta la cantidad de un producto en el carrito.
      *
+     * Este método incrementa la cantidad de un producto en el carrito y redirige a la página del carrito.
+     *
      * @param int $id El ID del producto.
+     * 
+     * @return void
      */
     public function aumentarCantidad($id) {
         $productoId = $id;
         if (isset($_SESSION['carrito'][$productoId])) {
             $_SESSION['carrito'][$productoId]['cantidad']++;
         }
-        header('Location: '.BASE_URL.'carrito/obtenerCarrito/');        
+        header('Location: '.BASE_URL.'carrito/obtenerCarrito/');
     }
 
     /**
      * Disminuye la cantidad de un producto en el carrito.
      *
+     * Este método decrementa la cantidad de un producto en el carrito. Si la cantidad llega a 0, el producto es eliminado.
+     * Redirige a la página del carrito.
+     *
      * @param int $id El ID del producto.
+     * 
+     * @return void
      */
     public function disminuirCantidad($id) {
         $productoId = $id;
@@ -105,12 +133,13 @@ class CarritoController {
                 unset($_SESSION['carrito'][$productoId]);
             }
         }
-        header('Location: '.BASE_URL.'carrito/obtenerCarrito/');        
-
+        header('Location: '.BASE_URL.'carrito/obtenerCarrito/');
     }
 
     /**
      * Obtiene el total del carrito.
+     *
+     * Este método calcula el total de todos los productos en el carrito sumando el precio por la cantidad.
      *
      * @return float El total del carrito.
      */
@@ -123,5 +152,5 @@ class CarritoController {
         }
         return $total;
     }
-
 }
+?>

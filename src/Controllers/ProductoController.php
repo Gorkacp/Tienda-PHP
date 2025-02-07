@@ -67,17 +67,27 @@ class ProductoController{
             $imagen = null;
             if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === 0) {
                 $imagen = $_FILES['imagen'];
+                $nombreImagen = uniqid() . '-' . $imagen['name'];
+                $rutaImagen = __DIR__ . '/../../public/imagenes/' . $nombreImagen;
+
+                if (move_uploaded_file($imagen['tmp_name'], $rutaImagen)) {
+                    $imagen = $nombreImagen;
+                } else {
+                    // Manejar el error si la imagen no se pudo mover
+                    $this->pages->render('producto/crear', ['error' => 'No se pudo guardar la imagen.']);
+                    return;
+                }
             }
 
             $this->productoService->save($categoriaId, $nombre, $descripcion, $precio, $stock, $imagen);
 
-            header('Location: ' . BASE_URL);
+            header('Location: ' . BASE_URL . 'producto/gestionarProductos');
+            exit(); // Asegúrate de detener el script después de la redirección
         } else {
             $this->pages->render('producto/crear');
         }
     }
-
-
+    
     /**
      * Obtiene los productos de una categoría.
      *
@@ -86,10 +96,10 @@ class ProductoController{
      */
     public function borrar($id) {
         $this->productoService->delete($id);
-
+    
         header('Location: ' . BASE_URL . 'producto/gestionarProductos');
+        exit(); // Asegúrate de detener el script después de la redirección
     }
-
 
     /**
      * Obtiene los productos de una categoría.

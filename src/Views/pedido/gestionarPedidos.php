@@ -8,8 +8,7 @@
 </head>
 <body>
     
-
-<?php if(($_SESSION['login']->rol == 'admin') && (isset($_SESSION['login']))):?>
+<?php if(($_SESSION['login']->rol == 'admin') && (isset($_SESSION['login']))): ?>
 <section>
     <h1>Gestionar Pedidos</h1>
     
@@ -21,7 +20,7 @@
         </div>
     <?php endif; ?>
 
-    <?php if (isset($_SESSION['login']) && $pedidos >= 1): ?>
+    <?php if (isset($pedidos) && count($pedidos) > 0): ?>
     <table>
         <tr>
             <th>Id</th>
@@ -43,8 +42,8 @@
                     <td><input type="text" name="data[hora]" value="<?=$pedido['hora']?>"></td>
                     <td>
                         <select name="data[estado]">
-                            <option value="pendiente">Pendiente</option>
-                            <option value="confirmado">Confirmado</option>
+                            <option value="pendiente" <?= $pedido['estado'] == 'pendiente' ? 'selected' : '' ?>>Pendiente</option>
+                            <option value="confirmado" <?= $pedido['estado'] == 'confirmado' ? 'selected' : '' ?>>Confirmado</option>
                         </select>
                     </td>
                     <td><input type="text" name="data[usuario_id]" value="<?=$pedido['usuario_id']?>"></td>
@@ -68,7 +67,7 @@
                 <a href="<?=BASE_URL?>pedido/editar/?id=<?=$pedido['id']?>"><i class="ri-edit-line"></i>editar</a>
             </div></td>
         </tr>
-        <?php endif;?>
+        <?php endif; ?>
         <?php endforeach; ?>
     </table>
     <?php else: ?>

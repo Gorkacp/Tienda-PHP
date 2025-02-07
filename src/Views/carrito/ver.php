@@ -30,7 +30,7 @@
                 <tr>
                     <td>
                         <div class="productos-carrito">
-                            <img src="<?=BASE_URL?>UPLOADS/<?=$producto['imagen']?>" alt="">
+                            <img src="<?=BASE_URL?>imagenes/<?=$producto['imagen']?>" alt="">
                             <div class="productos-carritoinfo">
                                 <p><?= $producto['nombre'] ?></p>
                                 <p><?= $producto['precio'] ?>€</p>
@@ -72,10 +72,10 @@
             <div class="total">
                 <?php if (empty($_SESSION['carrito'])): ?>
                     <p>Total: <b>0€</b></p>
-                    <p>Número de artículos: 0</p>
+                    <p>Número de productos: 0</p>
                 <?php else: ?>
                     <p>Total: <b><?=$total?>€</b></p>
-                    <p>Número de artículos: <?= count($_SESSION['carrito']) ?></p>
+                    <p>Número de productos: <?= count($_SESSION['carrito']) ?></p>
                 <?php endif; ?>
             </div>
         </div>

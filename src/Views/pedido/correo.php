@@ -7,9 +7,9 @@
     <title>Pedido Confirmado</title>
 </head>
 <body>
-    <h1>¡Su pedido ha sido confirmado!</h1>
+    <h1>¡Su pedido esta confirmado!</h1>
     <p>Estimado(a) <?php echo htmlspecialchars($nombre); ?>,</p>
-    <p>Le informamos que su pedido está ya reparto. Llegará en un plazo de 2 días laborales</p>
+    <p>Le informamos que su pedido está ya reparto.</p>
     <p>Detalles del pedido:</p>
     <ul>
         <li>ID del pedido: <?php echo htmlspecialchars($idPedido); ?></li>
@@ -25,9 +25,9 @@
             </tr>
             <?php endforeach; ?>
         </table></li>
-        <li>Fecha del pedido: <?php echo htmlspecialchars($fecha) ." ". htmlspecialchars($hora);  ?></li>
+        <li>Fecha: <?php echo htmlspecialchars($fecha) ." ". htmlspecialchars($hora);  ?></li>
     </ul>
-    <p>Saludos cordiales, <?=$nombre?></p>
-    <p>Tienda de Pablo López Lozano</p>
+    <p>Un saludo <?=$nombre?></p>
+    <p>Tienda de Gorka Carmona Pino</p>
 </body>
 </html>

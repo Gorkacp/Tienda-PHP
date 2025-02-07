@@ -11,15 +11,22 @@ use Controllers\PedidoController;
 use Lib\Router;
 
 class Routes {
+    /**
+     * Método estático para definir todas las rutas de la aplicación.
+     * Registra las rutas con el método y controlador correspondiente.
+     */
     public static function index() {
+        // Ruta para la página de inicio
         Router::add('GET', '/', function() {
             return (new InicioController())->index();
         });
 
+        // Ruta para ver una categoría por ID
         Router::add('GET', '/categoria/ver/?id=:id', function($id) {
             return (new CategoriaController())->ver($id);
         });
 
+        // Rutas para crear una categoría (GET y POST)
         Router::add('GET', '/categoria/crear', function() {
             return (new CategoriaController())->crear();
         });
@@ -28,46 +35,61 @@ class Routes {
             return (new CategoriaController())->crear();
         });
 
+        // Ruta para borrar una categoría por ID
         Router::add('GET', '/categoria/borrar/?id=:id', function($id) {
             return (new CategoriaController())->borrar($id);
         });
 
+        // Ruta para editar una categoría por ID
         Router::add('GET', '/categoria/editar/?id=:id', function($id) {
             return (new CategoriaController())->editar($id);
         });
 
+        // Ruta para actualizar una categoría (POST)
         Router::add('POST', '/categoria/actualizar', function() {
             return (new CategoriaController())->actualizar();
         });
 
+        // Ruta para gestionar categorías
         Router::add('GET', '/categoria/gestionarCategorias', function() {
             return (new CategoriaController())->gestionarCategorias();
         });
 
+        // Ruta para ver detalles de un producto por ID
         Router::add('GET', '/producto/verDetalles/?id=:id', function($id) {
             return (new ProductoController())->verDetalles($id);
         });
 
+        // Rutas para crear un producto (GET y POST)
         Router::add('GET', '/producto/crear', function() {
             return (new ProductoController())->crear();
         });
 
+        Router::add('POST', '/producto/crear', function() {
+            return (new ProductoController())->crear();
+        });
+
+        // Ruta para borrar un producto por ID
         Router::add('GET', '/producto/borrar/?id=:id', function($id) {
             return (new ProductoController())->borrar($id);
         });
 
+        // Ruta para editar un producto por ID
         Router::add('GET', '/producto/editar/?id=:id', function($id) {
             return (new ProductoController())->editar($id);
         });
 
+        // Ruta para actualizar un producto (POST)
         Router::add('POST', '/producto/editar', function() {
             return (new ProductoController())->editar();
         });
 
+        // Ruta para gestionar productos
         Router::add('GET', '/producto/gestionarProductos', function() {
             return (new ProductoController())->gestionarProductos();
         });
 
+        // Rutas para gestionar el carrito de compras
         Router::add('GET', '/carrito/agregarProducto/?id=:id', function($id) {
             return (new CarritoController())->agregarProducto($id);
         });
@@ -88,13 +110,14 @@ class Routes {
             return (new CarritoController())->disminuirCantidad($id);
         });
 
+        // Rutas para gestionar pedidos
         Router::add('GET', '/pedido/crear', function() {
             return (new PedidoController())->crear();
         });
 
         Router::add('GET', '/pedido/mostrarPedido', function() {
             return (new PedidoController())->mostrarPedido();
-        }); 
+        });
 
         Router::add('GET', '/pedido/misPedidos', function() {
             return (new PedidoController())->misPedidos();
@@ -102,10 +125,6 @@ class Routes {
 
         Router::add('GET', '/pedido/todosLosPedidos', function() {
             return (new PedidoController())->todosLosPedidos();
-        });
-
-        Router::add('GET', '/pedido/crear', function() {
-            return (new PedidoController())->crear();
         });
 
         Router::add('POST', '/pedido/crear', function() {
@@ -124,17 +143,14 @@ class Routes {
             return (new PedidoController())->editar($id);
         });
 
-        Router::add('GET', '/pedido/actualizar', function() {
-            return (new PedidoController())->actualizar();
-        });
-
         Router::add('POST', '/pedido/actualizar', function() {
             return (new PedidoController())->actualizar();
         });
 
+        // Rutas para gestionar usuarios
         Router::add('GET', '/usuario/login', function() {
             return (new UsuarioController())->login();
-        });   
+        });
 
         Router::add('POST', '/usuario/login', function() {
             return (new UsuarioController())->login();
@@ -168,10 +184,13 @@ class Routes {
             return (new UsuarioController())->actualizar();
         });
 
+        // Ruta para manejar errores 404
         Router::add('GET', '/error', function() {
             return (new ErrorController())->error404();
         });
 
+        // Despachar las rutas definidas
         Router::dispatch();
     }
 }
+?>
