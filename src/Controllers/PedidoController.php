@@ -111,35 +111,36 @@ class PedidoController {
      *
      * @return array Los pedidos obtenidos.
      */
-    public function crear () {
-
-        if (!isset($_SESSION['login']) || $_SESSION['carrito'] == "") {
+    public function crear() {
+        if (!isset($_SESSION['login']) || empty($_SESSION['carrito'])) {
             header('Location: ' . BASE_URL . 'usuario/login');
+            exit;
         }
-
-        else {
-            $provincia = isset($_POST['provincia']) ? $_POST['provincia'] : false;
-            $localidad = isset($_POST['localidad']) ? $_POST['localidad'] : false;
-            $direccion = isset($_POST['direccion']) ? $_POST['direccion'] : false;
-            $coste = isset($_POST['coste']) ? $_POST['coste'] : false;
-            $estado = 'pendiente';
-            $fecha = Utils::getFecha();
-            $hora = Utils::getHora();
-
-            $errores = $this->validarPedido($provincia, $localidad, $direccion);
-
-            if (!empty($errores)) {
-                $this->pages->render('pedido/crear', ['errores' => $errores]);
-            } else {
-            
-            $usuario = $_SESSION['login'];
-            $carrito = $_SESSION['carrito'];
-            $total = $this->pedidoService->getTotalCarrito($carrito);
-            $pedido = $this->pedidoService->save($usuario->id, $provincia, $localidad, $direccion, $total, $estado, $fecha, $hora, $carrito);
+    
+        $provincia = isset($_POST['provincia']) ? $_POST['provincia'] : false;
+        $localidad = isset($_POST['localidad']) ? $_POST['localidad'] : false;
+        $direccion = isset($_POST['direccion']) ? $_POST['direccion'] : false;
+    
+        $errores = $this->validarPedido($provincia, $localidad, $direccion);
+    
+        if (!empty($errores)) {
+            $this->pages->render('pedido/crear', ['errores' => $errores]);
+            exit;
+        }
+    
+        $usuario = $_SESSION['login'];
+        $carrito = $_SESSION['carrito'];
+        $total = $this->pedidoService->getTotalCarrito($carrito);
+        $pedido = $this->pedidoService->save($usuario->id, $provincia, $localidad, $direccion, $total, 'pendiente', Utils::getFecha(), Utils::getHora(), $carrito);
+    
+        if ($pedido) {
             unset($_SESSION['carrito']);
+            $this->enviarEmail($pedido); // Llamada al método enviarEmail
             header('Location: ' . BASE_URL . 'pedido/misPedidos');
-            
-            }
+            exit;
+        } else {
+            $errores[] = 'No se pudo crear el pedido.';
+            $this->pages->render('pedido/crear', ['errores' => $errores]);
         }
     }
 
@@ -254,42 +255,29 @@ class PedidoController {
         try {
             // Decirle a PHPMailer que use SMTP
             $mail->isSMTP();
-    
             // Activar depuración SMTP para detalles más extensos en caso de errores
             $mail->SMTPDebug = SMTP::DEBUG_SERVER; // Cambia a SMTP::DEBUG_OFF para desactivar la depuración
-    
             // Establecer el nombre del servidor de correo
             $mail->Host = 'smtp.gmail.com';
-    
             // Número de puerto SMTP:
             $mail->Port = 465;
-    
             // Establecer el mecanismo de encriptación a usar:
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-    
             // Si se debe usar autenticación SMTP
             $mail->SMTPAuth = true;
-    
             // Nombre de usuario para la autenticación SMTP - usa la dirección de correo completa para Gmail
             $mail->Username = 'gorkacarmonapino@gmail.com';
-    
             // Contraseña para la autenticación SMTP
             $mail->Password = 'eqlu ahyy ykbk dftf';  // Considera usar una variable de entorno para la seguridad
-    
             // Establecer el correo del remitente
-            $mail->setFrom('gorkacarmonapino@gmail.com', 'Tienda');
-    
+            $mail->setFrom('gorkacarmonapino@gmail.com', 'Tienda de Gorka');
             // Establecer una dirección de respuesta alternativa
             $mail->addReplyTo('no-reply@tienda.com', 'Tienda Soporte');
-    
             // Establecer a quién se debe enviar el mensaje
             $mail->addAddress($_SESSION['login']->email, $_SESSION['login']->nombre);
-    
             // Establecer la línea de asunto
             $mail->Subject = 'Ya ha llegado su pedido';
-    
             ob_start();
-    
             // Definir las variables
             $nombre = $_SESSION['login']->nombre;
             $idPedido = $id;
@@ -311,9 +299,12 @@ class PedidoController {
             $mail->AltBody = 'Este es el cuerpo del mensaje en texto plano';
     
             // Enviar el mensaje, comprobar errores
-            $mail->send();
-            echo '<h1><a href="/Tienda-PHP">Volver</a></h1>';
-            echo '¡Mensaje enviado!';
+            if (!$mail->send()) {
+                echo 'Error en el correo: ' . $mail->ErrorInfo;
+            } else {
+                echo '<h1><a href="/Tienda-PHP">Volver</a></h1>';
+                echo '¡Mensaje enviado!';
+            }
         } catch (Exception $e) {
             echo 'Error en el correo: ' . $mail->ErrorInfo;
         }

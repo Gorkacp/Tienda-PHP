@@ -23,10 +23,10 @@
         <label for="provincia">Provincia</label>
         <input type="text" name="provincia" required>
 
-        <label for="localidad">Ciudad</label>
+        <label for="localidad">Localidad</label>
         <input type="text" name="localidad" required>
 
-        <label for="direccion">Calle</label>
+        <label for="direccion">Direcciom</label>
         <input type="text" name="direccion" required>
 
         <input type="submit" value="Confirmar Pedido">
