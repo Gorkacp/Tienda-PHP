@@ -1,1 +1,30 @@
-vendor
+# Ignorar el directorio vendor (dependencias de Composer)
+vendor/
+
+# Ignorar archivos de configuración específicos del entorno
+.env
+.env.local
+.env.*.local
+
+# Ignorar archivos de caché y logs
+cache/
+logs/
+
+# Ignorar archivos de configuración del IDE
+.idea/
+.vscode/
+
+# Ignorar archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Ignorar archivos de compilación
+node_modules/
+public/build/
+
+# Ignorar archivos de PHPUnit
+phpunit.xml
+phpunit.xml.dist
+
+# Ignorar archivos de cobertura de código
+coverage/

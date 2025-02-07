@@ -160,6 +160,38 @@ class PedidoRepository {
     }
 
     /**
+     * Guarda un nuevo pedido en la base de datos.
+     *
+     * @param int $usuarioId El ID del usuario asociado al pedido.
+     * @param string $provincia La provincia del pedido.
+     * @param string $localidad La localidad del pedido.
+     * @param string $direccion La dirección de envío.
+     * @param float $coste El coste total del pedido.
+     * @param string $estado El estado del pedido.
+     * @param string $fecha La fecha del pedido.
+     * @param string $hora La hora del pedido.
+     * @param array $carrito Array con los productos del carrito.
+     * @return int El ID del nuevo pedido.
+     */
+    public function save($usuarioId, $provincia, $localidad, $direccion, $coste, $estado, $fecha, $hora, $carrito) {
+        try {
+            $this->db->beginTransaction();
+
+            // Insertar el pedido
+            $pedidoId = $this->insertPedido($usuarioId, $provincia, $localidad, $direccion, $coste, $estado, $fecha, $hora);
+
+            // Insertar las líneas del pedido
+            $this->insertLineasPedido($pedidoId, $carrito);
+
+            $this->db->commit();
+            return $pedidoId;
+        } catch (PDOException $e) {
+            $this->db->rollBack();
+            throw $e;
+        }
+    }
+
+    /**
      * Inserta un nuevo pedido en la base de datos.
      *
      * @param int $usuarioId El ID del usuario asociado al pedido.
@@ -172,8 +204,7 @@ class PedidoRepository {
      * @param string $hora La hora del pedido.
      * @return int El ID del nuevo pedido.
      */
-    private function insertPedido($usuarioId, $provincia, $localidad, $direccion, $coste, $estado, $fecha, $hora)
-    {
+    private function insertPedido($usuarioId, $provincia, $localidad, $direccion, $coste, $estado, $fecha, $hora) {
         $sqlPedido = "INSERT INTO pedidos (usuario_id, provincia, localidad, direccion, coste, estado, fecha, hora) VALUES (:usuarioId, :provincia, :localidad, :direccion, :coste, :estado, :fecha, :hora)";
         $stmtPedido = $this->db->prepara($sqlPedido);
         $stmtPedido->bindParam(':usuarioId', $usuarioId, PDO::PARAM_INT);
@@ -196,8 +227,7 @@ class PedidoRepository {
      * @param int $pedidoId El ID del pedido.
      * @param array $carrito Array con los productos del carrito.
      */
-    private function insertLineasPedido($pedidoId, $carrito)
-    {
+    private function insertLineasPedido($pedidoId, $carrito) {
         foreach ($carrito as $producto) {
             $productoId = $producto['id'];
             $cantidad = $producto['cantidad'];
@@ -209,6 +239,13 @@ class PedidoRepository {
             $stmtLineaPedido->bindParam(':unidades', $cantidad, PDO::PARAM_INT);
             $stmtLineaPedido->execute();
         }
+    }
+
+    public function confirmarPedido($pedidoId) {
+        $sql = "UPDATE pedidos SET estado = 'confirmado' WHERE id = :id";
+        $stmt = $this->db->prepara($sql);
+        $stmt->bindParam(':id', $pedidoId, PDO::PARAM_INT);
+        return $stmt->execute();
     }
 }
 ?>

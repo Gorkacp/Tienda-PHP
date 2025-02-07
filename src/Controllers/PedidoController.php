@@ -12,6 +12,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
+
 /**
  * Clase PedidoController
  *
@@ -244,83 +245,77 @@ class PedidoController {
      * @return void
      */
     public function enviarEmail($id) {
-        /**
-         * Este ejemplo muestra la configuración para usar cuando se envía a través de los servidores de Gmail de Google.
-         * Utiliza autenticación tradicional de id y contraseña - mira el ejemplo de gmail_xoauth.phps
-         * para ver cómo usar XOAUTH2.
-         * La sección IMAP muestra cómo guardar este mensaje en la carpeta 'Correo Enviado' utilizando comandos IMAP.
-         */
-        
         // Importar las clases de PHPMailer al espacio de nombres global
         require '../vendor/autoload.php';
-        
+    
         // Crear una nueva instancia de PHPMailer
-        $mail = new PHPMailer();
-        
-        // Decirle a PHPMailer que use SMTP
-        $mail->isSMTP();
-        
-        // Activar depuración SMTP para detalles más extensos en caso de errores
-        $mail->SMTPDebug = SMTP::DEBUG_SERVER;
-        
-        // Establecer el nombre del servidor de correo
-        $mail->Host = 'smtp.gmail.com';
-        
-        // Número de puerto SMTP:
-        $mail->Port = 465;
-        
-        // Establecer el mecanismo de encriptación a usar:
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-        
-        // Si se debe usar autenticación SMTP
-        $mail->SMTPAuth = true;
-        
-        // Nombre de usuario para la autenticación SMTP - usa la dirección de correo completa para Gmail
-        $mail->Username = 'gorkacarmonapino@gmail.com';
-        
-        // Contraseña para la autenticación SMTP
-        $mail->Password = 'eqlu ahyy ykbk dftf';  // Considera usar una variable de entorno para la seguridad
-        
-        // Establecer el correo del remitente
-        $mail->setFrom('gorkacarmonapino@gmail.com', 'Tienda');
-        
-        // Establecer una dirección de respuesta alternativa
-        $mail->addReplyTo('replyto@example.com', 'Primer Apellido');
-        
-        // Establecer a quién se debe enviar el mensaje
-        $mail->addAddress($_SESSION['login']->email, $_SESSION['login']->nombre);
-        
-        // Establecer la línea de asunto
-        $mail->Subject = 'Ya ha llegado su pedido';
-        
-        ob_start();
-        
-        // Definir las variables
-        $nombre = $_SESSION['login']->nombre;
-        $idPedido = $id;
-        $productos = $this->pedidoService->getProductosPedido($id);
-        $fecha = Utils::getFecha();
-        $hora = Utils::getHora();
-        
-        // Incluir el archivo y almacenar la salida en una variable
-        include __DIR__ . '/../Views/pedido/correo.php';
-        $html = ob_get_contents();
-        
-        // Finalizar el almacenamiento en búfer
-        ob_end_clean();
-        
-        // Usar la salida como el cuerpo HTML del correo
-        $mail->msgHTML($html, __DIR__);
-        
-        // Reemplazar el cuerpo en texto plano con uno creado manualmente
-        $mail->AltBody = 'Este es el cuerpo del mensaje en texto plano';
-        
-        // Enviar el mensaje, comprobar errores
-        if (!$mail->send()) {
-            echo 'Error en el correo: ' . $mail->ErrorInfo;
-        } else {
+        $mail = new PHPMailer(true);
+    
+        try {
+            // Decirle a PHPMailer que use SMTP
+            $mail->isSMTP();
+    
+            // Activar depuración SMTP para detalles más extensos en caso de errores
+            $mail->SMTPDebug = SMTP::DEBUG_SERVER; // Cambia a SMTP::DEBUG_OFF para desactivar la depuración
+    
+            // Establecer el nombre del servidor de correo
+            $mail->Host = 'smtp.gmail.com';
+    
+            // Número de puerto SMTP:
+            $mail->Port = 465;
+    
+            // Establecer el mecanismo de encriptación a usar:
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+    
+            // Si se debe usar autenticación SMTP
+            $mail->SMTPAuth = true;
+    
+            // Nombre de usuario para la autenticación SMTP - usa la dirección de correo completa para Gmail
+            $mail->Username = 'gorkacarmonapino@gmail.com';
+    
+            // Contraseña para la autenticación SMTP
+            $mail->Password = 'eqlu ahyy ykbk dftf';  // Considera usar una variable de entorno para la seguridad
+    
+            // Establecer el correo del remitente
+            $mail->setFrom('gorkacarmonapino@gmail.com', 'Tienda');
+    
+            // Establecer una dirección de respuesta alternativa
+            $mail->addReplyTo('no-reply@tienda.com', 'Tienda Soporte');
+    
+            // Establecer a quién se debe enviar el mensaje
+            $mail->addAddress($_SESSION['login']->email, $_SESSION['login']->nombre);
+    
+            // Establecer la línea de asunto
+            $mail->Subject = 'Ya ha llegado su pedido';
+    
+            ob_start();
+    
+            // Definir las variables
+            $nombre = $_SESSION['login']->nombre;
+            $idPedido = $id;
+            $productos = $this->pedidoService->getProductosPedido($id);
+            $fecha = Utils::getFecha();
+            $hora = Utils::getHora();
+    
+            // Incluir el archivo y almacenar la salida en una variable
+            include __DIR__ . '/../Views/pedido/correo.php';
+            $html = ob_get_contents();
+    
+            // Finalizar el almacenamiento en búfer
+            ob_end_clean();
+    
+            // Usar la salida como el cuerpo HTML del correo
+            $mail->msgHTML($html, __DIR__);
+    
+            // Reemplazar el cuerpo en texto plano con uno creado manualmente
+            $mail->AltBody = 'Este es el cuerpo del mensaje en texto plano';
+    
+            // Enviar el mensaje, comprobar errores
+            $mail->send();
             echo '<h1><a href="/Tienda-PHP">Volver</a></h1>';
             echo '¡Mensaje enviado!';
+        } catch (Exception $e) {
+            echo 'Error en el correo: ' . $mail->ErrorInfo;
         }
     }
-}    
+}

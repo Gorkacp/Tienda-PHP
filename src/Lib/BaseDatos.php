@@ -4,7 +4,7 @@ use PDO;
 use PDOException;
 use Exception;
 
-class BaseDatos{
+class BaseDatos {
     /** @var PDO Conexión a la base de datos */
     private $conexion;
     
@@ -62,8 +62,7 @@ class BaseDatos{
      *
      * @param string $consultasQL Consulta SQL a ejecutar.
      */
-    public function consulta(string $consultasQL): void
-    {
+    public function consulta(string $consultasQL): void {
         $this->resultado = $this->conexion->query($consultasQL);
     }
 
@@ -72,9 +71,8 @@ class BaseDatos{
      *
      * @return mixed El siguiente registro como un arreglo asociativo, o false si no hay más registros.
      */
-    public function extraer_registro(): mixed
-    {
-        return ( $fila = $this->resultado->fetch(PDO::FETCH_ASSOC))? $fila:false;
+    public function extraer_registro(): mixed {
+        return ($fila = $this->resultado->fetch(PDO::FETCH_ASSOC)) ? $fila : false;
     }
 
     /**
@@ -82,8 +80,7 @@ class BaseDatos{
      *
      * @return array Un arreglo de todos los registros obtenidos.
      */
-    public function extraer_todos(): array
-    {
+    public function extraer_todos(): array {
         return $this->resultado->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -92,15 +89,14 @@ class BaseDatos{
      *
      * @return int El número de filas afectadas.
      */
-    public function filasAfectadas(): int
-    {
+    public function filasAfectadas(): int {
         return $this->resultado->rowCount();
     }
 
     /**
      * Cierra la conexión con la base de datos.
      */
-    public function close(){
+    public function close() {
         if ($this->conexion !== null) {
             $this->conexion = null;
         }
@@ -112,28 +108,28 @@ class BaseDatos{
      * @param string $pre La sentencia SQL a preparar.
      * @return PDOStatement La sentencia preparada.
      */
-    public function prepara($pre){
+    public function prepara($pre) {
         return $this->conexion->prepare($pre);
     }
 
     /**
      * Inicia una transacción en la base de datos.
      */
-    public function empezarTransaccion(){
+    public function beginTransaction() {
         $this->conexion->beginTransaction();
     }
 
     /**
      * Ejecuta una transacción en la base de datos.
      */
-    public function ejecutarTransaccion(){
+    public function commit() {
         $this->conexion->commit();
     }
 
     /**
      * Deshace la transacción actual.
      */
-    public function rollback(){
+    public function rollBack() {
         $this->conexion->rollBack();
     }
 
@@ -142,7 +138,7 @@ class BaseDatos{
      *
      * @return string El ID del último registro insertado.
      */
-    public function lastInsertId(){
+    public function lastInsertId() {
         return $this->conexion->lastInsertId();
     }
 }
