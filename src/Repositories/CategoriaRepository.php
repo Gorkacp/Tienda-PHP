@@ -93,7 +93,7 @@ class CategoriaRepository {
     }
 
     /**
-     * Elimina una categoría por su ID.
+     * Elimina una categoría por su ID y también elimina los productos asociados.
      *
      * Este método elimina una categoría de la base de datos usando su ID.
      *
@@ -112,7 +112,9 @@ class CategoriaRepository {
             $result = false;
         }
 
-        $del->closeCursor();
+        $del->closeCursor(); //  closeCursor en PDO se utiliza para liberar la conexión al servidor de base de 
+        //datos para que otras consultas SQL puedan ser ejecutadas. Esto es especialmente útil cuando se trabaja con grandes 
+        //conjuntos de resultados o cuando se necesita ejecutar múltiples consultas en la misma conexión
         $del = null;
 
         return $result;

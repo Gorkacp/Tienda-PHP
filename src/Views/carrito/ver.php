@@ -11,6 +11,11 @@
     <div id="carrito" class="carrito container">
         <h1>Carrito</h1>
         
+        <?php if (isset($_SESSION['error'])): ?>
+            <p class="error"><?= $_SESSION['error'] ?></p>
+            <?php unset($_SESSION['error']); ?>
+        <?php endif; ?>
+        
         <?php if (isset($errores)): ?>
             <p class="errores"><?= $errores ?></p>
         <?php endif; ?>
@@ -42,7 +47,11 @@
                             <div>
                                 <label><a href="<?=BASE_URL?>carrito/disminuirCantidad/?id=<?=$producto['id']?>"> - </a></label>
                                 <label><?= $producto['cantidad'] ?></label>
-                                <label><a href="<?=BASE_URL?>carrito/aumentarCantidad/?id=<?=$producto['id']?>"> + </a></label>
+                                <?php if ($producto['cantidad'] < $producto['stock']): ?>
+                                    <label><a href="<?=BASE_URL?>carrito/aumentarCantidad/?id=<?=$producto['id']?>"> + </a></label>
+                                <?php else: ?>
+                                    <label class="no-stock"> + </label>
+                                <?php endif; ?>
                             </div>
                             <a href="<?=BASE_URL?>carrito/eliminarProducto/?id=<?=$producto['id']?>" class="eliminar">
                                 <i class="ri-delete-bin-2-line"></i>
@@ -79,7 +88,6 @@
                 <?php endif; ?>
             </div>
         </div>
-
     </div>
 </section>
 </body>

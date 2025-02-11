@@ -247,5 +247,23 @@ class PedidoRepository {
         $stmt->bindParam(':id', $pedidoId, PDO::PARAM_INT);
         return $stmt->execute();
     }
+    /**
+     * Resta el stock de los productos en el pedido.
+     *
+     * @param int $pedidoId El ID del pedido.
+     * @param array $carrito Array con los productos del carrito.
+     */
+    private function restarStock($pedidoId, $carrito) {
+        foreach ($carrito as $producto) {
+            $productoId = $producto['id'];
+            $cantidad = $producto['cantidad'];
+
+            $sqlStock = "UPDATE productos SET stock = stock - :cantidad WHERE id = :productoId";
+            $stmtStock = $this->db->prepara($sqlStock);
+            $stmtStock->bindParam(':cantidad', $cantidad, PDO::PARAM_INT);
+            $stmtStock->bindParam(':productoId', $productoId, PDO::PARAM_INT);
+            $stmtStock->execute();
+        }
+    }
 }
 ?>

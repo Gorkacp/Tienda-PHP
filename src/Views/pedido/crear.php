@@ -26,7 +26,7 @@
         <label for="localidad">Localidad</label>
         <input type="text" name="localidad" required>
 
-        <label for="direccion">Direcciom</label>
+        <label for="direccion">Direccion</label>
         <input type="text" name="direccion" required>
 
         <input type="submit" value="Confirmar Pedido">

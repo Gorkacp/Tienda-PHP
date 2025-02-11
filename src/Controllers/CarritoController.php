@@ -36,6 +36,7 @@ class CarritoController {
      * Agrega un producto al carrito.
      *
      * Este método agrega un producto al carrito de compras. Si el producto ya está en el carrito, se aumenta la cantidad.
+     * Verifica el stock disponible antes de agregar o aumentar la cantidad.
      * Redirige a la página del carrito.
      *
      * @param int $id El ID del producto.
@@ -47,8 +48,23 @@ class CarritoController {
         $this->producto->setId($productoId);
         $producto = $this->productoService->getById($productoId);
         if ($producto) {
-            $_SESSION['carrito'][$productoId] = $producto;
-            $_SESSION['carrito'][$productoId]['cantidad'] = 1;
+            if (!isset($_SESSION['carrito'][$productoId])) {
+                if ($producto['stock'] > 0) {
+                    $_SESSION['carrito'][$productoId] = $producto;
+                    $_SESSION['carrito'][$productoId]['cantidad'] = 1;
+                } else {
+                    $_SESSION['error'] = "No hay suficiente stock para agregar este producto.";
+                }
+            } else {
+                $cantidadActual = $_SESSION['carrito'][$productoId]['cantidad'];
+                if ($cantidadActual < $producto['stock']) {
+                    $_SESSION['carrito'][$productoId]['cantidad']++;
+                } else {
+                    // Manejar el caso cuando se intenta agregar más productos de los que hay en stock
+                    // Por ejemplo, mostrar un mensaje de error
+                    $_SESSION['error'] = "No hay suficiente stock para agregar más de este producto.";
+                }
+            }
         }
         header('Location: '.BASE_URL.'carrito/obtenerCarrito/');
     }
