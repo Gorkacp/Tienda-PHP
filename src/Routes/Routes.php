@@ -209,6 +209,27 @@ class Routes {
             return (new ErrorController())->error404();
         });
 
+        // Rutas para la API de productos
+        Router::add('GET', '/api/productos', function() {
+            return (new ProductoController())->getAll();
+        });
+        
+        Router::add('GET', '/api/productos/:id', function($id) {
+            return (new ProductoController())->getById($id);
+        });
+        
+        Router::add('POST', '/api/productos', function() {
+            return (new ProductoController())->create();
+        });
+        
+        Router::add('PUT', '/api/productos/:id', function($id) {
+            return (new ProductoController())->update($id);
+        });
+        
+        Router::add('DELETE', '/api/productos/:id', function($id) {
+            return (new ProductoController())->delete($id);
+        });        
+
         // Despachar las rutas definidas
         Router::dispatch();
     }

@@ -3,6 +3,8 @@ namespace Repositories;
 
 use Lib\BaseDatos;
 use PDO;
+use PDOException;
+use Exception;
 
 /**
  * Clase ProductoRepository
@@ -89,21 +91,21 @@ class ProductoRepository {
      * @return bool Retorna true si el producto se guardó correctamente, false si hubo un error.
      */
     public function save($categoriaId, $nombre, $descripcion, $precio, $stock, $imagen) {
-        $sql = "INSERT INTO productos (categoria_id, nombre, descripcion, precio, stock, imagen) 
-                VALUES (:categoriaId, :nombre, :descripcion, :precio, :stock, :imagen)";
-    
-        $stmt = $this->db->prepara($sql);
-        $stmt->bindParam(':categoriaId', $categoriaId, PDO::PARAM_INT);
-        $stmt->bindParam(':nombre', $nombre, PDO::PARAM_STR);
-        $stmt->bindParam(':descripcion', $descripcion, PDO::PARAM_STR);
-        $stmt->bindParam(':precio', $precio, PDO::PARAM_STR);
-        $stmt->bindParam(':stock', $stock, PDO::PARAM_INT);
-        $stmt->bindParam(':imagen', $imagen, PDO::PARAM_STR);
-    
-        $save = $stmt->execute();
-        $this->db->close();
-    
-        return $save;
+        try {
+            $sql = "INSERT INTO productos (categoria_id, nombre, descripcion, precio, stock, imagen) 
+                    VALUES (:categoriaId, :nombre, :descripcion, :precio, :stock, :imagen)";
+            $stmt = $this->db->prepara($sql);
+            $stmt->bindParam(':categoriaId', $categoriaId, PDO::PARAM_INT);
+            $stmt->bindParam(':nombre', $nombre, PDO::PARAM_STR);
+            $stmt->bindParam(':descripcion', $descripcion, PDO::PARAM_STR);
+            $stmt->bindParam(':precio', $precio, PDO::PARAM_STR);
+            $stmt->bindParam(':stock', $stock, PDO::PARAM_INT);
+            $stmt->bindParam(':imagen', $imagen, PDO::PARAM_STR);
+            $stmt->execute();
+            return $stmt->rowCount() > 0;
+        } catch (PDOException $e) {
+            throw new Exception("Error al guardar el producto: " . $e->getMessage());
+        }
     }
 
     /**
@@ -111,12 +113,28 @@ class ProductoRepository {
      *
      * @param int $productId ID del producto a eliminar.
      */
-    public function delete($productId) {
-        $sql = "DELETE FROM productos WHERE id = :id";
-        $stmt = $this->db->prepara($sql);
-        $stmt->bindParam(':id', $productId, PDO::PARAM_INT);
-        $stmt->execute();
-        $this->db->close();
+    public function delete($id) {
+        try {
+            $this->db->beginTransaction();
+    
+            // Eliminar las referencias en lineas_pedidos
+            $sql = "DELETE FROM lineas_pedidos WHERE producto_id = :id";
+            $stmt = $this->db->prepara($sql);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            // Eliminar el producto
+            $sql = "DELETE FROM productos WHERE id = :id";
+            $stmt = $this->db->prepara($sql);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            $this->db->commit();
+            return $stmt->rowCount() > 0;
+        } catch (PDOException $e) {
+            $this->db->rollBack();
+            throw $e;
+        }
     }
 
     /**
@@ -141,17 +159,21 @@ class ProductoRepository {
      * @param int $categoriaId ID de la categoría del producto.
      * @param string $imagen Nueva ruta de la imagen del producto.
      */
-    public function update($productId, $nombre, $descripcion, $precio, $categoriaId, $imagen) {
-        $sql = "UPDATE productos SET nombre = :nombre, descripcion = :descripcion, precio = :precio, categoria_id = :categoriaId, imagen = :imagen WHERE id = :id";
-        $stmt = $this->db->prepara($sql);
-        $stmt->bindParam(':nombre', $nombre, PDO::PARAM_STR);
-        $stmt->bindParam(':descripcion', $descripcion, PDO::PARAM_STR);
-        $stmt->bindParam(':precio', $precio, PDO::PARAM_STR);
-        $stmt->bindParam(':categoriaId', $categoriaId, PDO::PARAM_INT);
-        $stmt->bindParam(':imagen', $imagen, PDO::PARAM_STR);
-        $stmt->bindParam(':id', $productId, PDO::PARAM_INT);
-        $stmt->execute();
-        $this->db->close();
+    public function update($id, $nombre, $descripcion, $precio, $categoriaId, $imagen) {
+        try {
+            $sql = "UPDATE productos SET nombre = :nombre, descripcion = :descripcion, precio = :precio, categoria_id = :categoriaId, imagen = :imagen WHERE id = :id";
+            $stmt = $this->db->prepara($sql);
+            $stmt->bindParam(':nombre', $nombre, PDO::PARAM_STR);
+            $stmt->bindParam(':descripcion', $descripcion, PDO::PARAM_STR);
+            $stmt->bindParam(':precio', $precio, PDO::PARAM_STR);
+            $stmt->bindParam(':categoriaId', $categoriaId, PDO::PARAM_INT);
+            $stmt->bindParam(':imagen', $imagen, PDO::PARAM_STR);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->rowCount() > 0;
+        } catch (PDOException $e) {
+            throw new Exception("Error al actualizar el producto: " . $e->getMessage());
+        }
     }
 }
 ?>

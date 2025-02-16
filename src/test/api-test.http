@@ -1,0 +1,44 @@
+# Obtener todos los productos
+GET http://localhost/Tienda-PHP/api/productos
+Accept: application/json
+
+###
+
+# Obtener un producto por su ID
+GET http://localhost/Tienda-PHP/api/productos/7
+Accept: application/json
+
+###
+
+# Crear un nuevo producto
+POST http://localhost/Tienda-PHP/api/productos
+Content-Type: application/json
+
+{
+  "categoria_id": 2, 
+  "nombre": "Nuevo Producto",
+  "descripcion": "Descripción del nuevo producto",
+  "precio": 100.0,
+  "stock": 50,
+  "imagen": "ruta/a/la/imagen.jpg"
+}
+
+###
+
+# Actualizar un producto existente
+PUT http://localhost/Tienda-PHP/api/productos/9
+Content-Type: application/json
+
+{
+  "nombre": "Producto Actualizado",
+  "descripcion": "Descripción actualizada",
+  "precio": 150.0,
+  "categoria_id": 2,  # Importante que el id este en la tabla de categorias
+  "imagen": "ruta/a/la/nueva-imagen.jpg"
+}
+
+###
+
+# Eliminar un producto por su ID
+DELETE http://localhost/Tienda-PHP/api/productos/23
+Accept: application/json
