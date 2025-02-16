@@ -7,11 +7,11 @@ use Utils\Utils;
 use Services\UsuarioService;
 use Repositories\UsuarioRepository;
 
-
 class UsuarioController {
     private Pages $pages;
     private UsuarioService $usuarioService;
     private $errores = [];
+    private UsuarioRepository $usuarioRepository;
 
     // Constructor de la clase UsuarioController
     public function __construct()
@@ -37,7 +37,6 @@ class UsuarioController {
         $nombreRegex = "/^[a-zA-ZáéíóúÁÉÍÓÚ ]*$/";
         $emailRegex = "/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/";
         $passwordRegex = "/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/"; // Al menos una letra, un número y mínimo 8 caracteres
-    
     
         if (empty($nombre) || !preg_match($nombreRegex, $nombre)) {
             $this->errores[] = 'El nombre solo debe contener letras y espacios.';
@@ -179,7 +178,6 @@ class UsuarioController {
         $emailRegex = "/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/";
         $passwordRegex = "/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/"; 
     
-    
         if (!preg_match($nombreRegex, $nombre)) {
             $this->errores[] = 'El nombre solo debe contener letras y espacios.';
         }
@@ -226,4 +224,68 @@ class UsuarioController {
         }
         header("Location:".BASE_URL."usuario/verTodos");
     }
+
+    // Método para mostrar el formulario de recuperación de contraseña
+    public function mostrarFormularioRecuperacion() {
+        $this->pages->render('usuario/recuperar');
+    }
+
+    // Método para manejar la solicitud de recuperación de contraseña
+    public function solicitarRecuperacion() {
+        $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
+        $resultado = $this->usuarioService->solicitarRecuperacion($email);
+    
+        if ($resultado) {
+            $_SESSION['mensaje'] = "Se ha enviado un correo de recuperación.";
+        } else {
+            $_SESSION['errores'] = "No se pudo enviar el correo de recuperación.";
+        }
+    
+        header("Location: " . BASE_URL . "usuario/recuperar");
+        exit();
+    }
+
+    // Método para mostrar el formulario de restablecimiento de contraseña
+    public function mostrarFormularioRestablecimiento($param = null, $queryParams = []) {
+        $token = $queryParams['token'] ?? null;
+        
+        if (!$token) {
+            $_SESSION['errores'] = "El token es requerido.";
+            header("Location: " . BASE_URL . "usuario/recuperar");
+            exit();
+        }
+        
+        $this->pages->render('usuario/restablecer', ['token' => $token]);
+    }
+
+    // Método para manejar la solicitud de restablecimiento de contraseña
+    public function restablecerPassword() {
+        $token = $_POST['token'];
+        $nuevaPassword = $_POST['password'];
+    
+        // Validar token
+        if (empty($token)) {
+            $_SESSION['errores'] = "El token es requerido.";
+            header("Location: " . BASE_URL . "usuario/recuperar");
+            exit();
+        }
+        // Validar nueva contraseña
+        if (strlen($nuevaPassword) < 8) {
+            $_SESSION['errores'] = "La contraseña debe tener al menos 8 caracteres.";
+            header("Location: " . BASE_URL . "usuario/restablecer?token=" . urlencode($token));
+            exit();
+        }
+        // Llamar al servicio para restablecer la contraseña
+        $resultado = $this->usuarioService->restablecerPassword($token, $nuevaPassword);
+    
+        if ($resultado) {
+            $_SESSION['mensaje'] = "Su contraseña ha sido restablecida correctamente.";
+            header("Location: " . BASE_URL . "usuario/login");
+        } else {
+            $_SESSION['errores'] = "No se pudo restablecer la contraseña. El token es inválido o ha expirado.";
+            header("Location: " . BASE_URL . "usuario/restablecer?token=" . urlencode($token));
+        }
+        exit();
+    }
 }
+?>

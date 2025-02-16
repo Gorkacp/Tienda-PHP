@@ -184,6 +184,26 @@ class Routes {
             return (new UsuarioController())->actualizar();
         });
 
+        // Ruta para mostrar el formulario de recuperación de contraseña
+        Router::add('GET', '/usuario/recuperar', function() {
+            return (new UsuarioController())->mostrarFormularioRecuperacion();
+        });
+
+        // Ruta para manejar la solicitud de recuperación de contraseña
+        Router::add('POST', '/usuario/solicitarRecuperacion', function() {
+            return (new UsuarioController())->solicitarRecuperacion();
+        });
+
+        // Ruta para mostrar el formulario de restablecimiento de contraseña
+        Router::add('GET', '/usuario/restablecer', function() {
+            return (new UsuarioController())->mostrarFormularioRestablecimiento();
+        });
+
+        // Ruta para manejar la solicitud de restablecimiento de contraseña
+        Router::add('POST', '/usuario/restablecer', function() {
+            return (new UsuarioController())->restablecerPassword();
+        });
+
         // Ruta para manejar errores 404
         Router::add('GET', '/error', function() {
             return (new ErrorController())->error404();

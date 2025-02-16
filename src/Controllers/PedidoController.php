@@ -11,6 +11,7 @@ use Services\PedidoService;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
+use TCPDF;
 
 
 /**
@@ -242,16 +243,16 @@ class PedidoController {
 
 
     /**
-     * Envia un correo electrónico al cliente.
+     * Envia un correo electrónico al cliente con un PDF adjunto.
      * @return void
      */
     public function enviarEmail($id) {
         // Importar las clases de PHPMailer al espacio de nombres global
         require '../vendor/autoload.php';
-    
+        
         // Crear una nueva instancia de PHPMailer
         $mail = new PHPMailer(true);
-    
+        
         try {
             // Decirle a PHPMailer que use SMTP
             $mail->isSMTP();
@@ -276,27 +277,30 @@ class PedidoController {
             // Establecer a quién se debe enviar el mensaje
             $mail->addAddress($_SESSION['login']->email, $_SESSION['login']->nombre);
             // Establecer la línea de asunto
-            $mail->Subject = 'Ya ha llegado su pedido';
-            ob_start();
-            // Definir las variables
-            $nombre = $_SESSION['login']->nombre;
-            $idPedido = $id;
+            $mail->Subject = 'Factura de su pedido';
+    
+            // Generar el PDF
+            $pdf = new TCPDF();
+            $pdf->AddPage();
+            $pdf->SetFont('helvetica', '', 12);
+            $html = '<h1>Factura del Pedido</h1>';
+            $html .= '<p>Nombre: ' . $_SESSION['login']->nombre . '</p>';
+            $html .= '<p>ID del Pedido: ' . $id . '</p>';
+            $html .= '<p>Fecha: ' . Utils::getFecha() . '</p>';
+            $html .= '<p>Hora: ' . Utils::getHora() . '</p>';
+            $html .= '<p>Productos:</p>';
             $productos = $this->pedidoService->getProductosPedido($id);
-            $fecha = Utils::getFecha();
-            $hora = Utils::getHora();
+            foreach ($productos as $producto) {
+                $html .= '<p>' . $producto['nombre'] . ' - ' . $producto['precio'] . '€</p>';
+            }
+            $pdf->writeHTML($html, true, false, true, false, '');
+            $pdfContent = $pdf->Output('', 'S');
     
-            // Incluir el archivo y almacenar la salida en una variable
-            include __DIR__ . '/../Views/pedido/correo.php';
-            $html = ob_get_contents();
+            // Adjuntar el PDF al correo
+            $mail->addStringAttachment($pdfContent, 'factura.pdf');
     
-            // Finalizar el almacenamiento en búfer
-            ob_end_clean();
-    
-            // Usar la salida como el cuerpo HTML del correo
-            $mail->msgHTML($html, __DIR__);
-    
-            // Reemplazar el cuerpo en texto plano con uno creado manualmente
-            $mail->AltBody = 'Este es el cuerpo del mensaje en texto plano';
+            // Establecer el cuerpo del mensaje
+            $mail->Body = 'Adjunto encontrará la factura de su pedido.';
     
             // Enviar el mensaje, comprobar errores
             if (!$mail->send()) {

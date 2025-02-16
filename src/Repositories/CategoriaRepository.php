@@ -102,20 +102,33 @@ class CategoriaRepository {
      */
     public function delete($id): bool {
         try {
-            $del = $this->db->prepara("DELETE FROM categorias WHERE id = :id");
-            $del->bindValue(':id', $id);
+            // Iniciar una transacción
+            $this->db->beginTransaction();
 
-            $del->execute();
+            // Eliminar productos asociados a la categoría
+            $delProductos = $this->db->prepara("DELETE FROM productos WHERE categoria_id = :id");
+            $delProductos->bindValue(':id', $id);
+            $delProductos->execute();
+            $delProductos->closeCursor();
+
+            // Eliminar la categoría
+            $delCategoria = $this->db->prepara("DELETE FROM categorias WHERE id = :id");
+            $delCategoria->bindValue(':id', $id);
+            $delCategoria->execute();
+            $delCategoria->closeCursor();
+
+            // Confirmar la transacción
+            $this->db->commit();
 
             $result = true;
-        } catch (PDOException $error){
+        } catch (PDOException $error) {
+            // Revertir la transacción en caso de error
+            $this->db->rollBack();
             $result = false;
         }
 
-        $del->closeCursor(); //  closeCursor en PDO se utiliza para liberar la conexión al servidor de base de 
-        //datos para que otras consultas SQL puedan ser ejecutadas. Esto es especialmente útil cuando se trabaja con grandes 
-        //conjuntos de resultados o cuando se necesita ejecutar múltiples consultas en la misma conexión
-        $del = null;
+        $delProductos = null;
+        $delCategoria = null;
 
         return $result;
     }

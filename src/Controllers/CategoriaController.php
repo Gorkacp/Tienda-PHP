@@ -101,7 +101,24 @@ class CategoriaController{
      * @return void
      */
     public function borrar($id) {
+        // Obtener productos asociados a la categoría
+        $productos = $this->productoService->getByCategoria($id);
+        
+        // Verificar si se obtuvieron productos
+        if (is_array($productos)) {
+            foreach ($productos as $producto) {
+                // Verificar si el producto es un objeto y tiene el método getId
+                if (is_object($producto) && method_exists($producto, 'getId')) {
+                    // Eliminar el producto
+                    $this->productoService->delete($producto->getId());
+                }
+            }
+        }
+    
+        // Eliminar la categoría
         $this->categoriaService->delete($id);
+    
+        // Redirigir a la página de gestión de categorías
         $this->gestionarCategorias();
     }
 

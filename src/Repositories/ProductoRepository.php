@@ -120,6 +120,18 @@ class ProductoRepository {
     }
 
     /**
+     * Elimina todos los productos asociados a una categoría.
+     *
+     * @param int $categoriaId ID de la categoría.
+     * @return bool True si se eliminaron correctamente, false en caso contrario.
+     */
+    public function deleteByCategoriaId($categoriaId) {
+        // Implementa la lógica para eliminar productos por categoría
+        // Ejemplo de consulta SQL:
+        // DELETE FROM productos WHERE categoria_id = :categoriaId
+    }
+
+    /**
      * Actualiza los datos de un producto en la base de datos.
      *
      * @param int $productId ID del producto a actualizar.

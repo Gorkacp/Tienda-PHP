@@ -89,4 +89,26 @@ class UsuarioService {
     public function delete($id) {
         return $this->usuarioRepository->delete($id);
     }
+
+    /**
+     * Solicita la recuperación de la cuenta de un usuario.
+     * 
+     * @param string $email Correo electrónico del usuario que solicita la recuperación.
+     * @return bool Devuelve true si el correo se envía correctamente, false en caso de error.
+     */
+    public function solicitarRecuperacion($email) {
+        return $this->usuarioRepository->solicitarRecuperacion($email);
+    }
+
+    /**
+     * Restablece la contraseña de un usuario utilizando un token de recuperación.
+     * 
+     * @param string $token El token de recuperación.
+     * @param string $nuevaPassword La nueva contraseña.
+     * @return bool Devuelve true si la contraseña se restablece correctamente, false en caso de error.
+     */
+    public function restablecerPassword($token, $nuevaPassword) {
+        return $this->usuarioRepository->cambiarPasswordConToken($token, $nuevaPassword);
+    }
 }
+?>

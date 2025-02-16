@@ -1,4 +1,6 @@
-<?php use Utils\Utils;?>
+<?php 
+use Utils\Utils;
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -32,6 +34,7 @@
             <input type="password" name="data[password]" id="password" required>
 
             <p>¿No tienes una cuenta? <a href="<?=BASE_URL?>usuario/registro">Regístrate aquí</a></p>
+            <p>¿Olvidaste tu contraseña? <a href="<?=BASE_URL?>usuario/recuperar">Recupérala aquí</a></p>
 
             <input type="submit" value="Login" required>
         </form>

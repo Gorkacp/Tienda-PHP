@@ -226,4 +226,15 @@ class Usuario
     {
         $this->db->close();
     }
+
+    private $token;
+    private $emailConfirmed;
+
+    public function setToken($token) {
+        $this->token = $token;
+    }
+
+    public function setEmailConfirmed($emailConfirmed) {
+        $this->emailConfirmed = $emailConfirmed;
+    }
 }
