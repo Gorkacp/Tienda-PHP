@@ -241,6 +241,8 @@ class PedidoController {
 
     }
 
+    
+
 
     /**
      * Envia un correo electrónico al cliente con un PDF adjunto.
@@ -256,8 +258,8 @@ class PedidoController {
         try {
             // Decirle a PHPMailer que use SMTP
             $mail->isSMTP();
-            // Activar depuración SMTP para detalles más extensos en caso de errores
-            $mail->SMTPDebug = SMTP::DEBUG_SERVER; // Cambia a SMTP::DEBUG_OFF para desactivar la depuración
+            // Desactivar la depuración SMTP para evitar mostrar detalles extensos
+            $mail->SMTPDebug = SMTP::DEBUG_OFF; // Desactiva la depuración
             // Establecer el nombre del servidor de correo
             $mail->Host = 'smtp.gmail.com';
             // Número de puerto SMTP:
@@ -306,11 +308,11 @@ class PedidoController {
             if (!$mail->send()) {
                 echo 'Error en el correo: ' . $mail->ErrorInfo;
             } else {
-                echo '<h1><a href="/Tienda-PHP">Volver</a></h1>';
-                echo '¡Mensaje enviado!';
+                header('Location: ' . BASE_URL . 'pedido/misPedidos');
+                exit;
             }
         } catch (Exception $e) {
             echo 'Error en el correo: ' . $mail->ErrorInfo;
         }
     }
-}
+}    

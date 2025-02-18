@@ -1,6 +1,14 @@
 <?php
     use Controllers\CategoriaController;
     $categoria = (new CategoriaController())->obtenerCategorias();
+
+    // Verificar si el usuario intenta acceder a una sección de administración sin ser admin
+    if (isset($_GET['url']) && strpos($_GET['url'], 'gestionar') !== false) {
+        if (!isset($_SESSION['login']) || $_SESSION['login']->rol !== 'admin') {
+            header('Location: ' . BASE_URL . 'error/error.php');
+            exit();
+        }
+    }
 ?>
 
 <!DOCTYPE html>
@@ -60,8 +68,6 @@
             </div>
         </nav>
     </header>
-
-
 
 </body>
 </html>

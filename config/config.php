@@ -8,4 +8,6 @@
  * @const string BASE_URL La URL base de la aplicación.
  */
 const BASE_URL = "http://localhost/Tienda-PHP/";
+
+
 ?>

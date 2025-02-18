@@ -1,3 +1,4 @@
+
 <section>
     <h1>Gestionar Categorías</h1>
     <nav>

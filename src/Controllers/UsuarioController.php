@@ -245,8 +245,9 @@ class UsuarioController {
         exit();
     }
 
-    // Método para mostrar el formulario de restablecimiento de contraseña
-    public function mostrarFormularioRestablecimiento($param = null, $queryParams = []) {
+    
+     // Método para mostrar el formulario de restablecimiento de contraseña
+     public function mostrarFormularioRestablecimiento($param = null, $queryParams = []) {
         $token = $queryParams['token'] ?? null;
         
         if (!$token) {
