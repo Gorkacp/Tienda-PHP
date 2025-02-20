@@ -9,6 +9,7 @@ use Controllers\CarritoController;
 use Controllers\ErrorController;
 use Controllers\PedidoController;
 use Lib\Router;
+use Lib\Auth;
 
 class Routes {
     /**
@@ -28,30 +29,36 @@ class Routes {
 
         // Rutas para crear una categoría (GET y POST)
         Router::add('GET', '/categoria/crear', function() {
+            Auth::checkAdmin();
             return (new CategoriaController())->crear();
         });
 
         Router::add('POST', '/categoria/crear', function() {
+            Auth::checkAdmin();
             return (new CategoriaController())->crear();
         });
 
         // Ruta para borrar una categoría por ID
         Router::add('GET', '/categoria/borrar/?id=:id', function($id) {
+            Auth::checkAdmin();
             return (new CategoriaController())->borrar($id);
         });
 
         // Ruta para editar una categoría por ID
         Router::add('GET', '/categoria/editar/?id=:id', function($id) {
+            Auth::checkAdmin();
             return (new CategoriaController())->editar($id);
         });
 
         // Ruta para actualizar una categoría (POST)
         Router::add('POST', '/categoria/actualizar', function() {
+            Auth::checkAdmin();
             return (new CategoriaController())->actualizar();
         });
 
         // Ruta para gestionar categorías
         Router::add('GET', '/categoria/gestionarCategorias', function() {
+            Auth::checkAdmin();
             return (new CategoriaController())->gestionarCategorias();
         });
 
@@ -62,30 +69,36 @@ class Routes {
 
         // Rutas para crear un producto (GET y POST)
         Router::add('GET', '/producto/crear', function() {
+            Auth::checkAdmin();
             return (new ProductoController())->crear();
         });
 
         Router::add('POST', '/producto/crear', function() {
+            Auth::checkAdmin();
             return (new ProductoController())->crear();
         });
 
         // Ruta para borrar un producto por ID
         Router::add('GET', '/producto/borrar/?id=:id', function($id) {
+            Auth::checkAdmin();
             return (new ProductoController())->borrar($id);
         });
 
         // Ruta para editar un producto por ID
         Router::add('GET', '/producto/editar/?id=:id', function($id) {
+            Auth::checkAdmin();
             return (new ProductoController())->editar($id);
         });
 
         // Ruta para actualizar un producto (POST)
         Router::add('POST', '/producto/editar', function() {
+            Auth::checkAdmin();
             return (new ProductoController())->editar();
         });
 
         // Ruta para gestionar productos
         Router::add('GET', '/producto/gestionarProductos', function() {
+            Auth::checkAdmin();
             return (new ProductoController())->gestionarProductos();
         });
 
@@ -112,38 +125,47 @@ class Routes {
 
         // Rutas para gestionar pedidos
         Router::add('GET', '/pedido/crear', function() {
+            Auth::checkLogin();
             return (new PedidoController())->crear();
         });
 
         Router::add('GET', '/pedido/mostrarPedido', function() {
+            Auth::checkLogin();
             return (new PedidoController())->mostrarPedido();
         });
 
         Router::add('GET', '/pedido/misPedidos', function() {
+            Auth::checkLogin();
             return (new PedidoController())->misPedidos();
         });
 
         Router::add('GET', '/pedido/todosLosPedidos', function() {
+            Auth::checkAdmin();
             return (new PedidoController())->todosLosPedidos();
         });
 
         Router::add('POST', '/pedido/crear', function() {
+            Auth::checkLogin();
             return (new PedidoController())->crear();
         });
 
         Router::add('GET', '/pedido/confirmarPedido/?id=:id', function($id) {
+            Auth::checkAdmin();
             return (new PedidoController())->confirmarPedido($id);
         });
 
         Router::add('GET', '/pedido/eliminar/?id=:id', function($id) {
+            Auth::checkAdmin();
             return (new PedidoController())->eliminar($id);
         });
 
         Router::add('GET', '/pedido/editar/?id=:id', function($id) {
+            Auth::checkAdmin();
             return (new PedidoController())->editar($id);
         });
 
         Router::add('POST', '/pedido/actualizar', function() {
+            Auth::checkAdmin();
             return (new PedidoController())->actualizar();
         });
 
@@ -165,6 +187,7 @@ class Routes {
         });
 
         Router::add('GET', '/usuario/verTodos', function() {
+            Auth::checkAdmin();
             return (new UsuarioController())->verTodos();
         });
 
@@ -173,14 +196,17 @@ class Routes {
         });
 
         Router::add('GET', '/usuario/eliminar/?id=:id', function($id) {
+            Auth::checkAdmin();
             return (new UsuarioController())->eliminar($id);
         });
 
         Router::add('GET', '/usuario/editar/?id=:id', function($id) {
+            Auth::checkAdmin();
             return (new UsuarioController())->editar($id);
         });
 
         Router::add('POST', '/usuario/actualizar', function() {
+            Auth::checkAdmin();
             return (new UsuarioController())->actualizar();
         });
 
@@ -219,14 +245,17 @@ class Routes {
         });
         
         Router::add('POST', '/api/productos', function() {
+            Auth::checkAdmin();
             return (new ProductoController())->create();
         });
         
         Router::add('PUT', '/api/productos/:id', function($id) {
+            Auth::checkAdmin();
             return (new ProductoController())->update($id);
         });
         
         Router::add('DELETE', '/api/productos/:id', function($id) {
+            Auth::checkAdmin();
             return (new ProductoController())->delete($id);
         });        
 

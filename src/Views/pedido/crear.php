@@ -28,19 +28,20 @@
         <label for="direccion">Dirección</label>
         <input type="text" name="direccion" required>
 
-        <input type="submit" value="Confirmar Pedido">
     </form>
-
+    <p></p>
     <!-- Contenedor del botón de PayPal -->
     <div id="paypal-button-container"></div>
 </section>
 
 <script>
-    // Aquí calculamos el valor total del pedido dinámicamente (ejemplo: 100.00)
-    var totalPedido = 100.00; // Cambia esto por el cálculo real del total del carrito de compras
+    // Aquí obtenemos el valor total del pedido desde PHP
+    var totalPedido = <?= isset($totalCarrito) ? $totalCarrito : 0 ?>; // Asegúrate de que $totalCarrito esté definido en tu backend
+    console.log("Total del pedido:", totalPedido);
 
     paypal.Buttons({
         createOrder: function(data, actions) {
+            console.log("Creando orden con total:", totalPedido);
             return actions.order.create({
                 purchase_units: [{
                     amount: {
@@ -50,14 +51,16 @@
             });
         },
         onApprove: function(data, actions) {
+            console.log("Pago aprobado:", data);
             return actions.order.capture().then(function(details) {
+                console.log("Detalles del pago:", details);
                 alert('Pago completado por ' + details.payer.name.given_name);
                 // Aquí se envía el formulario de pedido
                 document.getElementById('pedido-form').submit();
             });
         },
         onError: function(err) {
-            console.error(err);
+            console.error('Error en PayPal:', err);
             alert("Hubo un error al procesar el pago. Por favor, inténtalo de nuevo.");
         }
     }).render('#paypal-button-container'); // Renderizamos el botón de PayPal

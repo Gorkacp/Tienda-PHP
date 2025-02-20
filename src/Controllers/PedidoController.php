@@ -40,16 +40,17 @@ class PedidoController {
      *
      * @return array Los pedidos obtenidos.
      */
-    public function mostrarPedido(){
-        if(!isset($_SESSION['login'])){
-            $this->pages->render('usuario/login' , ['errores' => 'No hay productos en el carrito']);
-        }
-        elseif(isset($_SESSION['login']) && count($_SESSION['carrito']) >= 1){
-            $this->pages->render('pedido/crear');
-        } elseif (isset($_SESSION['login']) && count($_SESSION['carrito']) == 0) {
-            $this->pages->render('carrito/ver' , ['errores' => 'No hay productos en el carrito']);
-        }
+public function mostrarPedido() {
+    if (!isset($_SESSION['login'])) {
+        $this->pages->render('usuario/login', ['errores' => 'No hay productos en el carrito']);
+    } elseif (isset($_SESSION['login']) && count($_SESSION['carrito']) >= 1) {
+        $carrito = $_SESSION['carrito'];
+        $totalCarrito = $this->pedidoService->getTotalCarrito($carrito);
+        $this->pages->render('pedido/crear', ['totalCarrito' => $totalCarrito]);
+    } elseif (isset($_SESSION['login']) && count($_SESSION['carrito']) == 0) {
+        $this->pages->render('carrito/ver', ['errores' => 'No hay productos en el carrito']);
     }
+}
 
     /**
      * Obtiene todos los pedidos.
@@ -238,7 +239,6 @@ class PedidoController {
             $this->pedidoService->confirmarPedido($id);
             $this->enviarEmail($id);
         }
-
     }
 
     
