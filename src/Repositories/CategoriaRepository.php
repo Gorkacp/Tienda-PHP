@@ -104,32 +104,42 @@ class CategoriaRepository {
         try {
             // Iniciar una transacción
             $this->db->beginTransaction();
-
-            // Eliminar productos asociados a la categoría
-            $delProductos = $this->db->prepara("DELETE FROM productos WHERE categoria_id = :id");
-            $delProductos->bindValue(':id', $id);
-            $delProductos->execute();
-            $delProductos->closeCursor();
-
+    
+            // Crear una categoría ficticia
+            $ficticiaNombre = 'Categoría Ficticia';
+            $insFicticia = $this->db->prepara("INSERT INTO categorias (id, nombre) values (null, :nombre)");
+            $insFicticia->bindValue(':nombre', $ficticiaNombre);
+            $insFicticia->execute();
+            $ficticiaId = $this->db->lastInsertId();
+            $insFicticia->closeCursor();
+    
+            // Actualizar productos asociados a la categoría eliminada para que apunten a la categoría ficticia
+            $updProductos = $this->db->prepara("UPDATE productos SET categoria_id = :ficticiaId WHERE categoria_id = :id");
+            $updProductos->bindValue(':ficticiaId', $ficticiaId);
+            $updProductos->bindValue(':id', $id);
+            $updProductos->execute();
+            $updProductos->closeCursor();
+    
             // Eliminar la categoría
             $delCategoria = $this->db->prepara("DELETE FROM categorias WHERE id = :id");
             $delCategoria->bindValue(':id', $id);
             $delCategoria->execute();
             $delCategoria->closeCursor();
-
+    
             // Confirmar la transacción
             $this->db->commit();
-
+    
             $result = true;
         } catch (PDOException $error) {
             // Revertir la transacción en caso de error
             $this->db->rollBack();
             $result = false;
         }
-
-        $delProductos = null;
+    
+        $insFicticia = null;
+        $updProductos = null;
         $delCategoria = null;
-
+    
         return $result;
     }
 

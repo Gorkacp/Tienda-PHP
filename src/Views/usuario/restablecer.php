@@ -22,7 +22,7 @@ use Utils\Utils;
             <label for="password">Nueva Contraseña</label>
             <input type="password" name="password" id="password" required>
 
-            <input type="submit" value="Restablecer" required>
+            <input type="submit" value="Restablecer">
         </form>
     </section>
 </body>

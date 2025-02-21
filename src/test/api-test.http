@@ -1,3 +1,4 @@
+
 # Obtener todos los productos
 GET http://localhost/Tienda-PHP/api/productos
 Accept: application/json

@@ -12,10 +12,6 @@ use Lib\Router;
 use Lib\Auth;
 
 class Routes {
-    /**
-     * Método estático para definir todas las rutas de la aplicación.
-     * Registra las rutas con el método y controlador correspondiente.
-     */
     public static function index() {
         // Ruta para la página de inicio
         Router::add('GET', '/', function() {
@@ -221,8 +217,8 @@ class Routes {
         });
 
         // Ruta para mostrar el formulario de restablecimiento de contraseña
-        Router::add('GET', '/usuario/restablecer', function() {
-            return (new UsuarioController())->mostrarFormularioRestablecimiento();
+        Router::add('GET', '/usuario/restablecer', function($param, $queryParams) {
+            return (new UsuarioController())->mostrarFormularioRestablecimiento($param, $queryParams);
         });
 
         // Ruta para manejar la solicitud de restablecimiento de contraseña
@@ -237,10 +233,12 @@ class Routes {
 
         // Rutas para la API de productos
         Router::add('GET', '/api/productos', function() {
+            Auth::checkAdmin();
             return (new ProductoController())->getAll();
         });
         
         Router::add('GET', '/api/productos/:id', function($id) {
+            Auth::checkAdmin();
             return (new ProductoController())->getById($id);
         });
         

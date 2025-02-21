@@ -68,7 +68,7 @@ class Router {
             echo \call_user_func($callback, $param);
         } else {
             // Si no se encuentra la ruta, se redirige al error 404.
-            header('Location: ./Tienda-PHP/error/');
+            
         }
     }
 }

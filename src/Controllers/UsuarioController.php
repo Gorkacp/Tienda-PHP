@@ -256,6 +256,9 @@ class UsuarioController {
             exit();
         }
         
+        // Mensaje de depuración
+        error_log("Token recibido: " . $token);
+        
         $this->pages->render('usuario/restablecer', ['token' => $token]);
     }
 
